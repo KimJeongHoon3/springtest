@@ -1,10 +1,14 @@
 package me.test.springcoretest;
 
+import me.test.springcoretest.pack.Test2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,8 +28,23 @@ public class AppRunner implements ApplicationRunner {
     @Value("${app.name4}")
     String name4;
 
+    @Value("${app.name5}")
+    String name5;
+
+    @Autowired
+    ResourceLoader resourceLoader;
+
+    @Autowired
+    ApplicationEventPublisher applicationEventPublisher;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
+
+        Resource resource=resourceLoader.getResource("classpath:/");
+        Resource fileResource=resourceLoader.getResource("file:/");
+        System.out.println(resource.getFile().getName());
+        System.out.println(fileResource.getFile().getName());
+
         System.out.println("proto");
         System.out.println(ctx.getBean(Proto.class));
         System.out.println(ctx.getBean(Proto.class));
@@ -48,5 +67,7 @@ public class AppRunner implements ApplicationRunner {
         System.out.println(name2);
         System.out.println(name3);
         System.out.println(name4);
+
+        applicationEventPublisher.publishEvent(new MyEvent(this,100));
     }
 }
