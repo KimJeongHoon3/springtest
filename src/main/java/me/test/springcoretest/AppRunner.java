@@ -77,10 +77,10 @@ public class AppRunner implements ApplicationRunner {
 //        System.out.println(resource.getFile().getName());
 //        System.out.println(fileResource.getFile().getName());
 //
-//        System.out.println("proto");
-//        System.out.println(ctx.getBean(Proto.class));
-//        System.out.println(ctx.getBean(Proto.class));
-//        System.out.println(ctx.getBean(Proto.class));
+        System.out.println("proto");
+        System.out.println(ctx.getBean(Proto.class));
+        System.out.println(ctx.getBean(Proto.class));
+        System.out.println(ctx.getBean(Proto.class));
 //
         System.out.println("single");
         System.out.println(ctx.getBean(Single.class));
@@ -90,10 +90,19 @@ public class AppRunner implements ApplicationRunner {
         //아래와 같이 호출할때 Singleton scope의 클래스에서 prototype scope의 인스턴스를 사용하고있을때에는, Scope의 proxymode옵션을 조정하지않으면(proxyMode=ScopedProxyMode.TARGET_CLASS), prototype으로 설정해놓은것은 항상 동일한 객체이다..
         //기본값은 별도의 Proxy로 감싸자않는데, Proxy로 감싸서 특정 작업을 해주어야 Singleton 상태의 클래스에서 Proxy instance를 참조할때 Proto 스콥의 인스턴스를 새로운 객체로 만들수있다
         // "proxyMode=ScopedProxyMode.TARGET_CLASS" 를 사용하면, 해당 객체는 프록시로 감싸진 상태가되어, 프록시로 감싼 객체(ProxyBean)를 호출하는것이다!
+
+        //아래 proto1에만 3이 셋팅되고 나머지는 초기값이 들어있는게 만족하는것은 provider로 가능.. 왜 proxymode를 target_class로할때 해당 클래스를 호출만하면 다 초기화를 해버릴까..
         System.out.println("proto by single");
-        System.out.println(ctx.getBean(Single.class).getProto());
-        System.out.println(ctx.getBean(Single.class).getProto());
-        System.out.println(ctx.getBean(Single.class).getProto());
+        Proto proto1 = ctx.getBean(Single.class).getProto();
+        System.out.println(proto1);
+        proto1.setA(3);
+        System.out.println(proto1.getA());
+        Proto proto2 = ctx.getBean(Single.class).getProto();
+        System.out.println("proto2 : "+ proto2);
+        System.out.println("proto2 : "+proto2.getA());
+        Proto proto3 = ctx.getBean(Single.class).getProto();
+        System.out.println("proto3 : "+ proto3);
+        System.out.println("proto3 : "+proto3.getClass());
 //
 //        System.out.println(name);
 //        System.out.println(name2);
